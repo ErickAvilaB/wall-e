@@ -1,5 +1,5 @@
 import logging
-from os import getenv
+from os import getenv, remove
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ContextTypes
@@ -15,6 +15,16 @@ logging.basicConfig(
 )
 
 
+def crear_carpeta_graficos() -> str:
+    import os
+    if not os.path.exists("graficos"):
+        os.makedirs("graficos")
+    return "graficos"
+
+
+CARPETA_GRAFICOS: str = crear_carpeta_graficos()
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
@@ -26,15 +36,13 @@ async def accion(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         ticker = context.args[0]
         accion = ClienteYFinance.get_accion(ticker, "1y")
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=f"{accion.ticker} - {accion.nombre_empresa}\n"
-                 f"Sector: {accion.sector}\n"
-                 f"País: {accion.pais}\n"
-                 f"Precio actual: {accion.divisa} {accion.precio_actual}\n"
-        )
+        mensaje: str = str(accion)
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=mensaje)
+        grafica: str = accion.generar_grafico(carpeta=CARPETA_GRAFICOS)
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=open(grafica, 'rb'))
+        remove(grafica)
     except Exception as e:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error al obtener la acción {ticker}")
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error al obtener la acción {ticker}: {e}")
 
 
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
