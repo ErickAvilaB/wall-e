@@ -35,8 +35,13 @@ class Accion:
         plt.figure(figsize=(10, 5))
         plt.plot(self.__historico['Date'], self.__historico['Close'],
                  label=f"Evolución", color='darkgreen', linewidth=3)
-        plt.axhline(y=self.precio_actual, color='r',
-                    linestyle='--', label=f"Precio actual: {self.precio_actual:.2f}")
+        ultimo_precio: float = self.__historico['Close'].iloc[-1]
+        ultima_fecha: str = self.__historico['Date'].iloc[-1]
+        plt.axhline(y=ultimo_precio, color='red', linestyle='--',
+                    label=f"Precio actual: {self.divisa} {ultimo_precio:.2f}")
+        plt.text(ultima_fecha, ultimo_precio,
+                 f"{self.divisa} {ultimo_precio:.2f}", fontsize=12,
+                 verticalalignment='bottom', horizontalalignment='right')
         plt.title(f"{self.ticker} - {self.nombre_empresa}")
         plt.xlabel("Fecha")
         plt.ylabel("Precio de cierre")
