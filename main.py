@@ -1,16 +1,16 @@
 import logging
-from os import getenv, remove
+from os import getenv, remove, path, makedirs
 from dotenv import load_dotenv
 from telegram import Update
-from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 from src import ExpresionAyuda, ExpresionAccion
 
 
 def crear_carpeta_graficos() -> str:
-    import os
-    if not os.path.exists("graficos"):
-        os.makedirs("graficos")
-    return "graficos"
+    ruta: str = "graficos"
+    if not path.exists(ruta):
+        makedirs(ruta)
+    return ruta
 
 
 CARPETA_GRAFICOS: str = crear_carpeta_graficos()
