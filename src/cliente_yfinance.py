@@ -4,7 +4,7 @@ from .accion import Accion
 
 class ClienteYFinance:
     @staticmethod
-    def get_accion(ticker: str, periodo_historico: str = "5d") -> Accion:
+    def get_accion(ticker: str, periodo_historico: str = "3mo") -> Accion:
         """
         Obtiene la información de una acción con base a su ticker
         - Parámetros:
@@ -13,10 +13,11 @@ class ClienteYFinance:
         - Retorna:
             - Accion: Objeto Accion con la información de la acción
         """
+        accion: Ticker = Ticker(ticker)
         try:
-            accion: Ticker = Ticker(ticker)
+            datos_historicos = accion.history(
+                period=periodo_historico, interval="1d")
             info: dict = accion.info
-            datos_historicos = accion.history(period=periodo_historico)
             return Accion(info, datos_historicos)
         except Exception as e:
-            raise Exception(f"Error al obtener la acción {ticker}")
+            raise Exception(f"Error al obtener la acción {ticker}: {e}")

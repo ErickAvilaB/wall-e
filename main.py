@@ -17,7 +17,7 @@ CARPETA_GRAFICOS: str = crear_carpeta_graficos()
 
 
 def periodos_validos(periodo: str) -> bool:
-    return periodo in ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max", "-ng"]
+    return periodo in ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"]
 
 
 def uso_comando_accion() -> str:
@@ -37,7 +37,8 @@ async def accion(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     ticker: str = context.args[0]
-    periodo: str = "3mo" if len(context.args) == 1 else context.args[1]
+    periodo: str = "3mo" if len(
+        context.args) == 1 or context.args[1] == "-ng" else context.args[1]
     incluir_grafico: bool = "-ng" not in context.args
     contexto: dict = {
         'ticker': ticker,
