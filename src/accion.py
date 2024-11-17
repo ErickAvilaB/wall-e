@@ -1,59 +1,85 @@
-import matplotlib.pyplot as plt
-
-
 class Accion:
-    def __init__(self, data: dict, valor_historico) -> None:
-        self.__data: dict = data
-        self.__historico = valor_historico
+    """
+    Clase que representa la información de una acción utilizando datos obtenidos de yfinance.
+    """
+
+    def __init__(self, info: dict) -> None:
+        """
+        Inicializa una instancia de la clase Accion.
+        Args:
+            info (dict): Diccionario con la información de la acción.
+        """
+        self.__info: dict = info
+
+    def __obtener_info(self, clave: str, valor_por_defecto=None):
+        """Método auxiliar para obtener información del diccionario."""
+        return self.__info.get(clave, valor_por_defecto)
 
     @property
     def nombre_empresa(self) -> str:
-        return self.__data['longName']
+        """Nombre completo de la empresa."""
+        return self.__obtener_info('longName', "N/A")
 
     @property
     def ticker(self) -> str:
-        return self.__data['symbol']
+        """Símbolo (ticker) de la acción."""
+        return self.__obtener_info('symbol', "N/A")
 
     @property
     def sector(self) -> str:
-        return self.__data['sector']
+        """Sector al que pertenece la empresa."""
+        return self.__obtener_info('sector', "N/A")
 
     @property
-    def pais(self) -> str:
-        return self.__data['country']
-
-    @property
-    def divisa(self) -> str:
-        return self.__data['currency']
+    def industria(self) -> str:
+        """Industria de la empresa."""
+        return self.__obtener_info('industry', "N/A")
 
     @property
     def precio_actual(self) -> float:
-        return self.__data['currentPrice']
+        """Precio actual de la acción."""
+        return self.__obtener_info('regularMarketPrice', 0.0)
 
-    def generar_grafico(self, carpeta: str = ".") -> str:
-        self.__historico.reset_index(inplace=True)
-        plt.figure(figsize=(10, 5))
-        plt.plot(self.__historico['Date'], self.__historico['Close'],
-                 label=f"Evolución", color='darkgreen', linewidth=3)
-        ultimo_precio: float = self.__historico['Close'].iloc[-1]
-        ultima_fecha: str = self.__historico['Date'].iloc[-1]
-        plt.axhline(y=ultimo_precio, color='red', linestyle='--',
-                    label=f"Precio actual: {self.divisa} {ultimo_precio:.2f}")
-        plt.text(ultima_fecha, ultimo_precio,
-                 f"{self.divisa} {ultimo_precio:.2f}", fontsize=12,
-                 verticalalignment='bottom', horizontalalignment='right')
-        plt.title(f"{self.ticker} - {self.nombre_empresa}")
-        plt.xlabel("Fecha")
-        plt.ylabel("Precio de cierre")
-        plt.grid()
-        plt.legend()
-        ruta_archivo: str = f"{carpeta}/{self.ticker}.png"
-        plt.savefig(ruta_archivo)
-        plt.close()
-        return ruta_archivo
+    @property
+    def precio_maximo(self) -> float:
+        """Precio máximo en las últimas 52 semanas."""
+        return self.__obtener_info('fiftyTwoWeekHigh', 0.0)
+
+    @property
+    def precio_minimo(self) -> float:
+        """Precio mínimo en las últimas 52 semanas."""
+        return self.__obtener_info('fiftyTwoWeekLow', 0.0)
+
+    @property
+    def capitalizacion(self) -> float:
+        """Capitalización de mercado de la empresa."""
+        return self.__obtener_info('marketCap', 0.0)
+
+    @property
+    def pais(self) -> str:
+        """País de origen de la empresa."""
+        return self.__obtener_info('country', "N/A")
+
+    @property
+    def divisa(self) -> str:
+        """Divisa en la que cotiza la acción."""
+        return self.__obtener_info('currency', "N/A")
+
+    @property
+    def info(self) -> dict:
+        """Diccionario completo con toda la información de la acción."""
+        return self.__info
 
     def __str__(self) -> str:
-        return f"{self.ticker} - {self.nombre_empresa}\n" \
-               f"Sector: {self.sector}\n" \
-               f"País: {self.pais}\n" \
-               f"Precio actual: {self.divisa} {self.precio_actual:.2f}"
+        """Representación en cadena del objeto Accion."""
+        return (
+            f"{self.ticker} - {self.nombre_empresa}\n"
+            f"  - País: {self.pais}\n"
+            f"  - Sector: {self.sector}\n"
+            f"  - Industria: {self.industria}\n"
+            f"  - Divisa: {self.divisa}\n"
+            f"  - Precio actual: {self.divisa} {self.precio_actual:.2f}\n"
+            f"  - Precio máximo (52 semanas): {self.divisa} {self.precio_maximo:.2f}\n"
+            f"  - Precio mínimo (52 semanas): {self.divisa} {self.precio_minimo:.2f}\n"
+            f"  - Capitalización: {self.divisa} {self.capitalizacion:,.2f}"
+        )
