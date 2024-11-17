@@ -2,36 +2,43 @@ import logging
 from os import getenv
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
-from src import ComandoEcho, ComandoDesconocido, ComandoAyuda, ComandoAccion
+from src import ExpresionEcho, ExpresionDesconocido, ExpresionAyuda, ExpresionAccion
 
 
-def main() -> None:
-    load_dotenv()
-
-    api_token: str = getenv('API_TOKEN')
-
+def configurar_logging() -> None:
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO
     )
 
-    application = ApplicationBuilder().token(api_token).build()
 
-    comando_echo: ComandoEcho = ComandoEcho()
+def crea_bot(api_token: str) -> ApplicationBuilder:
+    return ApplicationBuilder().token(api_token).build()
 
-    ayuda_handler = CommandHandler('ayuda', ComandoAyuda().responder)
-    start_handler = CommandHandler('start', ComandoAyuda().responder)
-    accion_handler = CommandHandler('accion', ComandoAccion().responder)
+
+def analizar_comandos() -> None:
+    ayuda_handler = CommandHandler('ayuda', ExpresionAyuda().interpretar)
+    start_handler = CommandHandler('start', ExpresionAyuda().interpretar)
+    accion_handler = CommandHandler('accion', ExpresionAccion().interpretar)
     echo_handler = MessageHandler(filters.TEXT & (
-        ~filters.COMMAND), comando_echo.responder)
+        ~filters.COMMAND), ExpresionEcho().interpretar)
     unknown_handler = MessageHandler(
-        filters.COMMAND, ComandoDesconocido().responder)
+        filters.COMMAND, ExpresionDesconocido().interpretar)
 
-    application.add_handler(ayuda_handler)
-    application.add_handler(start_handler)
-    application.add_handler(accion_handler)
-    application.add_handler(echo_handler)
-    application.add_handler(unknown_handler)
+    return [ayuda_handler, start_handler, accion_handler, echo_handler, unknown_handler]
+
+
+def main() -> None:
+    configurar_logging()
+
+    load_dotenv()
+
+    api_token: str = getenv('API_TOKEN')
+
+    application = crea_bot(api_token)
+
+    for handler in analizar_comandos():
+        application.add_handler(handler)
 
     application.run_polling()
 
