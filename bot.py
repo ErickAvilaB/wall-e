@@ -6,9 +6,6 @@ from src import ExpresionEcho, ExpresionDesconocido, ExpresionAyuda, ExpresionAc
 
 
 def configurar_logging() -> None:
-    """
-    Imprime los mensajes de log en la consola. En formato: [fecha] - [nombre] - [nivel] - [mensaje]
-    """
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO
@@ -16,13 +13,6 @@ def configurar_logging() -> None:
 
 
 def crea_bot(api_token: str) -> ApplicationBuilder:
-    """
-    Crea un bot de Telegram con el token proporcionado.
-    Args:
-        api_token (str): Token de la API de Telegram.
-    Returns:
-        ApplicationBuilder: Bot de Telegram.
-    """
     return ApplicationBuilder().token(api_token).build()
 
 
@@ -44,9 +34,6 @@ def crea_manejador() -> list:
 
 
 def main() -> None:
-    """
-    Define el punto de entrada de la aplicación.
-    """
     configurar_logging()
 
     load_dotenv()

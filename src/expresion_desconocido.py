@@ -1,9 +1,9 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from .expresion import Expresion
+from .expresion_abstracta import ExpresionAbstracta
 
 
-class ExpresionDesconocido(Expresion):
+class ExpresionDesconocido(ExpresionAbstracta):
     """
     Expresión que responde a un comando desconocido.
     """

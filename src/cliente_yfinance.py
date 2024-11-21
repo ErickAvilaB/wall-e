@@ -9,15 +9,6 @@ class ClienteYFinance:
 
     @staticmethod
     def get_info(ticker: str) -> Accion:
-        """
-        Obtiene información detallada de una acción utilizando su ticker.
-        Args:
-            ticker (str): El símbolo (ticker) de la acción.
-        Returns:
-            Accion: Objeto de la clase Accion con la información obtenida.
-        Raises:
-            ValueError: Si no se puede obtener la información de la acción.
-        """
         accion: Ticker = Ticker(ticker)
         try:
             info: dict = accion.info

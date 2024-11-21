@@ -1,9 +1,9 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from .expresion import Expresion
+from .expresion_abstracta import ExpresionAbstracta
 
 
-class ExpresionEcho(Expresion):
+class ExpresionEcho(ExpresionAbstracta):
     """
     Expresión que repite el mensaje proporcionado.
     """
@@ -11,5 +11,5 @@ class ExpresionEcho(Expresion):
     async def interpretar(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await self._enviar_mensaje(update, update.message.text)
 
-    def descripcion(self, mensaje: str = "") -> str:
+    def descripcion(self) -> str:
         return "[mensaje] - Repite el mensaje proporcionado."

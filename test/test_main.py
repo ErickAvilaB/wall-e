@@ -1,4 +1,4 @@
-from main import main
+from bot import main
 
 
 def test_main() -> None:
