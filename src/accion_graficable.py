@@ -10,10 +10,6 @@ class AccionGraficable(Accion):
         self.__valor_historico = valor_historico
 
     def generar_grafico(self, carpeta: str = ".") -> str:
-        # Validar que el DataFrame no esté vacío
-        if self.__valor_historico.empty:
-            raise ValueError("El DataFrame de valor histórico está vacío.")
-
         # Resetear el índice para que 'Date' sea una columna
         self.__valor_historico.reset_index(inplace=True)
 

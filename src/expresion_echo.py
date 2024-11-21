@@ -1,9 +1,9 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from .expresion_abstracta import ExpresionAbstracta
+from .expresion import Expresion
 
 
-class ExpresionEcho(ExpresionAbstracta):
+class ExpresionEcho(Expresion):
     """
     Expresión que repite el mensaje proporcionado.
     """

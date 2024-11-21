@@ -27,7 +27,7 @@ class Accion:
 
     @property
     def precio_actual(self) -> float:
-        return self.__obtener_info('regularMarketPrice', 0.0)
+        return self.__obtener_info('currentPrice', 0.0)
 
     @property
     def precio_maximo(self) -> float:
@@ -51,7 +51,6 @@ class Accion:
 
     @property
     def info(self) -> dict:
-        """Diccionario completo con toda la información de la acción."""
         return self.__info
 
     def __str__(self) -> str:

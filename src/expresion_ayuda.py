@@ -1,10 +1,10 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from .expresion_abstracta import ExpresionAbstracta
+from .expresion import Expresion
 from .expresion_accion import ExpresionAccion
 
 
-class ExpresionAyuda(ExpresionAbstracta):
+class ExpresionAyuda(Expresion):
     """
     Expresión que responde al comando /ayuda.
     """

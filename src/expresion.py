@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 
-class ExpresionAbstracta(ABC):
+class Expresion(ABC):
 
     @abstractmethod
     async def interpretar(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
